@@ -47,7 +47,9 @@
                                 <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" ShowInsertButton="True" />
                             </Fields>
                         </asp:DetailsView>
-                        <asp:GridView ID="gvSummary" runat="server" AutoGenerateColumns="False" DataSourceID="sqlSummarySalesTable">
+
+                        <div id ="SummaryDiv">
+                             <asp:GridView ID="gvSummary" runat="server" AutoGenerateColumns="False" DataSourceID="sqlSummarySalesTable">
                             <Columns>
                                 <asp:TemplateField HeaderText="Total Sales" SortExpression="Column1">
                                     <EditItemTemplate>
@@ -60,13 +62,15 @@
                                 <asp:BoundField DataField="EmpID" HeaderText="EmpID" SortExpression="EmpID" />
                             </Columns>
                         </asp:GridView>
-                        <asp:SqlDataSource ID="sqlSummarySalesTable" runat="server" ConnectionString="<%$ ConnectionStrings:mydbaseConnectionString %>" SelectCommand=" select sum(Amount), EmpID from SalesTable where EmpID=@EmpID
+                        </div>
+                            <asp:SqlDataSource ID="sqlSummarySalesTable" runat="server" ConnectionString="<%$ ConnectionStrings:mydbaseConnectionString %>" SelectCommand=" select sum(Amount), EmpID from SalesTable where EmpID=@EmpID
 group by EmpID">
                             <SelectParameters>
                                 <asp:ControlParameter ControlID="dvEmployees" Name="EmpID" PropertyName="SelectedValue" />
                             </SelectParameters>
                         </asp:SqlDataSource>
                         <br />
+                       <div id="SalesDiv">
                         <asp:GridView ID="gvSales"  
                             runat="server" 
                             AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="salesTableDataSource" AllowPaging="True" AllowSorting="True" 
@@ -109,6 +113,7 @@ group by EmpID">
                                 </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
+                       </div>
                     </asp:Panel>
                 </ContentTemplate>
             </asp:UpdatePanel>
@@ -156,6 +161,15 @@ group by EmpID">
 
             </textarea>
         </div>
+
+        <asp:Menu ID ="PrintMenu" runat="server" style="font-family:Arial; position:absolute">
+            <Items>
+                <asp:MenuItem Text="Print">
+                    <asp:MenuItem Text="Summary Grid"></asp:MenuItem>
+                    <asp:MenuItem Text="Sales Records"></asp:MenuItem>
+                </asp:MenuItem>
+            </Items>
+        </asp:Menu>
         
     </form>
     <script>
@@ -183,5 +197,23 @@ group by EmpID">
         $("#dvDiv").css("background-color", backColor)
         $("#divSticky").css(stickPos)
         $("#txtSticky").val(text)
+
+        $("li>a").click(function () {
+            if ($(this).text() == 'Sales Records')
+            {
+                var contents = document.getElementById("SalesDiv").innerHTML;
+                var printWindow = window.open("", "", "width=500, height=500");
+                printWindow.document.write(contents);
+                printWindow.print()
+                printWindow.close()
+            }
+            if ($(this).text() == 'Summary Grid') {
+                var contents = document.getElementById("SummaryDiv").innerHTML;
+                var printWindow = window.open("", "", "width=500, height=500");
+                printWindow.document.write(contents);
+                printWindow.print()
+                printWindow.close()
+            }
+        })
     </script>
 </html>
