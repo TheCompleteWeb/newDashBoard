@@ -21,4 +21,19 @@ public partial class _Default : System.Web.UI.Page
         else
             dvPanel.Visible = false;
     }
+
+    protected void dvEmployees_ItemDeleted(object sender, DetailsViewDeletedEventArgs e)
+    {
+        gvSales.DataBind();//Runs after item is removed from details view.
+    }
+
+    protected void gvSales_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+        gvSummary.DataBind();
+    }
+
+    protected void gvSales_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        gvSummary.DataBind();
+    }
 }
